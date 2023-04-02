@@ -30,6 +30,8 @@ async function onConversation() {
       requestOptions: { prompt: message, options: null },
     },
   )
+
+  // scrollToBottom()
 }
 </script>
 

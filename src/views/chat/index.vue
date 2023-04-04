@@ -1,6 +1,7 @@
 <script setup lang='ts'>
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
+import { NAutoComplete, NButton, NInput } from 'naive-ui'
 import { useChat } from './hooks/useChat'
 
 let controller: AbortController
@@ -33,16 +34,42 @@ async function onConversation() {
 
   // scrollToBottom()
 }
+
+function handleEnter(event: KeyboardEvent) {
+  if (event.key === 'Enter' && event.ctrlKey) {
+    event.preventDefault()
+    handleSubmit()
+  }
+}
+
+const placeholder = '输入问题'
 </script>
 
 <template>
-  <footer>
-    <div class="col-span-full">
-      <div class="mt-2 flex items-center gap-x-3">
-        <input v-model="prompt" type="textarea" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-        <button class="rounded-md bg-indigo-600 py-2 px-3 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" @click="handleSubmit">
-          Send
-        </button>
+  <footer class="p-4">
+    <div class="w-full max-w-screen-xl m-auto">
+      <div class="flex items-center justify-between space-x-2">
+        <NAutoComplete v-model.value="prompt">
+          <template #default="{ handleInput, handleBlur, handleFocus }">
+            <NInput
+              v-model.value="prompt"
+              type="textarea"
+              :placeholder="placeholder"
+              :autosize="{ minRows: 1, maxRows: 8 }"
+              @input="handleInput"
+              @focus="handleFocus"
+              @blur="handleBlur"
+              @keypress="handleEnter"
+            />
+          </template>
+        </NAutoComplete>
+        <NButton type="primary" @click="handleSubmit">
+          <template #icon>
+            <span class="dark:text-black">
+              发送
+            </span>
+          </template>
+        </NButton>
       </div>
     </div>
   </footer>

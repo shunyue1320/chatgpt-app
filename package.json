@@ -16,6 +16,7 @@
   "dependencies": {
     "@tauri-apps/api": "^1.2.0",
     "crypto-js": "^4.1.1",
+    "naive-ui": "^2.34.3",
     "pinia": "^2.0.33",
     "vue": "^3.2.45",
     "vue-router": "^4.1.6"

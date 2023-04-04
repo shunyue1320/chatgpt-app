@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { NAutoComplete, NButton, NInput } from 'naive-ui'
 import { useChat } from './hooks/useChat'
+import { SvgIcon } from '@/components/common'
 
 let controller: AbortController
 
@@ -66,7 +67,7 @@ const placeholder = '输入问题'
         <NButton type="primary" @click="handleSubmit">
           <template #icon>
             <span class="dark:text-black">
-              发送
+              <SvgIcon icon="ri:send-plane-fill" />
             </span>
           </template>
         </NButton>

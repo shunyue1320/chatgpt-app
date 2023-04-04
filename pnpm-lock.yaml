@@ -4,6 +4,7 @@ specifiers:
   '@antfu/eslint-config': ^0.37.0
   '@commitlint/cli': ^17.5.0
   '@commitlint/config-conventional': ^17.4.4
+  '@iconify/vue': ^4.1.1
   '@tauri-apps/api': ^1.2.0
   '@tauri-apps/cli': ^1.2.2
   '@types/crypto-js': ^4.1.1
@@ -26,6 +27,7 @@ specifiers:
   vue-tsc: ^1.0.11
 
 dependencies:
+  '@iconify/vue': 4.1.1_vue@3.2.47
   '@tauri-apps/api': 1.2.0
   crypto-js: 4.1.1
   naive-ui: 2.34.3_vue@3.2.47
@@ -638,6 +640,19 @@ packages:
   /@humanwhocodes/object-schema/1.2.1:
     resolution: {integrity: sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==}
     dev: true
+
+  /@iconify/types/2.0.0:
+    resolution: {integrity: sha512-+wluvCrRhXrhyOmRDJ3q8mux9JkKy5SJ/v8ol2tu4FVjyYvtEzkc/3pK15ET6RKg4b4w4BmTk1+gsCUhf21Ykg==}
+    dev: false
+
+  /@iconify/vue/4.1.1_vue@3.2.47:
+    resolution: {integrity: sha512-RL85Bm/DAe8y6rT6pux7D2FJSiUEM/TPfyK7GrbAOfTSwrhvwJW+S5yijdGcmtXouA8MtuH9C7l4hiSE4mLMjg==}
+    peerDependencies:
+      vue: '>=3'
+    dependencies:
+      '@iconify/types': 2.0.0
+      vue: 3.2.47
+    dev: false
 
   /@jridgewell/resolve-uri/3.1.0:
     resolution: {integrity: sha512-F2msla3tad+Mfht5cJq7LSXcdudKTWCVYUgw6pLFOOHSTtZlj6SWNYAp+AhuqLmWdBO2X5hPrLcu8cVP8fy28w==}

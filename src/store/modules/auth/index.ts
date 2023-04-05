@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { getToken } from './storage'
+import { getToken, removeToken } from './storage'
 
 interface SessionResponse {
   auth: boolean
@@ -16,4 +16,11 @@ export const useAuthStore = defineStore('auth-store', {
     token: getToken(),
     session: null,
   }),
+
+  actions: {
+    removeToken() {
+      this.token = undefined
+      removeToken()
+    },
+  },
 })

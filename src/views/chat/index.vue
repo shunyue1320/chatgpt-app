@@ -50,10 +50,10 @@ const placeholder = '输入问题'
   <footer class="p-4">
     <div class="w-full max-w-screen-xl m-auto">
       <div class="flex items-center justify-between space-x-2">
-        <NAutoComplete v-model.value="prompt">
+        <NAutoComplete v-model:value="prompt">
           <template #default="{ handleInput, handleBlur, handleFocus }">
             <NInput
-              v-model.value="prompt"
+              v-model:value="prompt"
               type="textarea"
               :placeholder="placeholder"
               :autosize="{ minRows: 1, maxRows: 8 }"

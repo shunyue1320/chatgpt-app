@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import AvatarComponent from './Avatar.vue'
-import ContentComponent from './Content.vue'
+import TextComponent from './Text.vue'
 
 interface MessageProps {
   dateTime?: string
@@ -25,7 +25,7 @@ const asRawText = ref(props.inversion)
         {{ dateTime }}
       </p>
       <div class="flex items-end gap-1 mt-2">
-        <ContentComponent
+        <TextComponent
           :inversion="inversion"
           :error="error"
           :text="text"

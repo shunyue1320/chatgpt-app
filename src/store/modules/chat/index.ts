@@ -25,6 +25,13 @@ export const useChatStore = defineStore('chat-store', {
         this.recordState()
       }
     },
+    updateChatByUuid(uuid: number, index: number, chat: Chat.Chat) {
+      const chatIndex = this.chat.findIndex(item => item.uuid === uuid)
+      if (chatIndex !== -1) {
+        this.chat[chatIndex].data[index] = { ...this.chat[chatIndex].data[index], ...chat }
+        this.recordState()
+      }
+    },
     recordState() {
       setLocalState(this.$state)
     },

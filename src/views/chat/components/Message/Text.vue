@@ -35,5 +35,5 @@ const wrapClass = computed(() => {
 </template>
 
 <style lang="less">
-@import url(./content.less);
+@import url(./text.less);
 </style>

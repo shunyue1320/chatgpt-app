@@ -56,7 +56,7 @@ const placeholder = t('chat.placeholder')
   <div class="flex flex-col w-full h-full">
     <mian class="flex-1 overflow-hidden">
       <div class="h-full overflow-hidden overflow-y-auto">
-        <div class="w-full p-2">
+        <div class="w-full p-4">
           <template v-if="dataSources.length">
             <Message
               v-for="(item, index) of dataSources"

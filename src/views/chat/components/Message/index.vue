@@ -1,5 +1,7 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import AvatarComponent from './Avatar.vue'
+import ContentComponent from './Content.vue'
 
 interface MessageProps {
   dateTime?: string
@@ -8,10 +10,9 @@ interface MessageProps {
   error?: boolean
   loading?: boolean
 }
-
 const props = defineProps<MessageProps>()
-// export default Vue.extend({
-// })
+
+const asRawText = ref(props.inversion)
 </script>
 
 <template>
@@ -24,7 +25,13 @@ const props = defineProps<MessageProps>()
         {{ dateTime }}
       </p>
       <div class="flex items-end gap-1 mt-2">
-        1111
+        <ContentComponent
+          :inversion="inversion"
+          :error="error"
+          :text="text"
+          :loading="loading"
+          :as-raw-text="asRawText"
+        />
       </div>
     </div>
   </div>

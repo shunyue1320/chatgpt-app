@@ -1,2 +1,5 @@
+import 'katex/dist/katex.min.css'
 import './lib/tailwind.css'
+import './lib/highlight.less'
+import './lib/github-markdown.less'
 import './global.less'

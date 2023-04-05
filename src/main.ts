@@ -5,6 +5,7 @@ import App from './App.vue'
 import { setupStore } from './store'
 import { setupRouter } from './router'
 import { setupNaiveStyleOverride } from './plugins'
+import { setupI18n } from './locales'
 
 async function bootstrap() {
   const app = createApp(App)
@@ -12,6 +13,8 @@ async function bootstrap() {
   setupNaiveStyleOverride()
 
   setupStore(app)
+
+  setupI18n(app)
 
   await setupRouter(app)
 

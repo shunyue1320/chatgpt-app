@@ -4,6 +4,7 @@ import { useRoute } from 'vue-router'
 import { NAutoComplete, NButton, NInput } from 'naive-ui'
 import { useChat } from './hooks/useChat'
 import { SvgIcon } from '@/components/common'
+import { t } from '@/locales'
 
 let controller: AbortController
 
@@ -43,7 +44,7 @@ function handleEnter(event: KeyboardEvent) {
   }
 }
 
-const placeholder = '输入问题'
+const placeholder = t('chat.placeholder')
 </script>
 
 <template>

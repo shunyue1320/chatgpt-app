@@ -1,0 +1,28 @@
+{
+  "name": "chatgpt-app-service",
+  "version": "1.0.0",
+  "private": false,
+  "description": "ChatGPT App Service",
+  "scripts": {
+    "start": "esno ./src/index.ts"
+  },
+  "keywords": [
+    "chatgpt",
+    "chatgpt-app",
+    "service"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@antfu/eslint-config": "^0.37.0"
+  },
+  "dependencies": {
+    "@koa/cors": "^4.0.0",
+    "axios": "^1.3.4",
+    "esno": "^0.16.3",
+    "koa": "^2.14.1",
+    "koa-json": "^2.0.2",
+    "koa-router": "^12.0.0",
+    "koa-static": "^5.0.0"
+  }
+}

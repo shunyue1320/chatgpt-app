@@ -1,23 +1,24 @@
 import Koa from 'koa'
 import serve from 'koa-static'
-import json from 'koa-json'
+import bodyparser from 'koa-bodyparser'
 import cors from '@koa/cors'
-import Router from 'koa-router'
+import chatgptRouter from './controllers/chatgptController'
 
 const app = new Koa()
-const router = new Router()
 
 app.use(serve('public'))
-app.use(json())
+app.use(bodyparser())
 app.use(cors({ origin: '*' }))
 
-router.post('/chat-process', async (ctx, next) => {
-  ctx.set('Content-type', 'application/octet-stream')
-  await next()
-})
+// app.use(async (ctx, next) => {
+//   ctx.set('Access-Control-Allow-Origin', '*')
+//   ctx.set('Access-Control-Allow-Headers', 'authorization, Content-Type')
+//   ctx.set('Access-Control-Allow-Methods', '*')
+//   await next()
+// })
 
-app.use(router.routes())
+app.use(chatgptRouter.routes())
 
-app.listen(3002, () => {
-  globalThis.console.log('Server started on port 3002')
+app.listen(3011, () => {
+  globalThis.console.log('Server started on port 3011')
 })

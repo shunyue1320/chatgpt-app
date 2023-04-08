@@ -11,13 +11,6 @@ app.use(serve('public'))
 app.use(bodyparser())
 app.use(cors({ origin: '*' }))
 
-// app.use(async (ctx, next) => {
-//   ctx.set('Access-Control-Allow-Origin', '*')
-//   ctx.set('Access-Control-Allow-Headers', 'authorization, Content-Type')
-//   ctx.set('Access-Control-Allow-Methods', '*')
-//   await next()
-// })
-
 app.use(chatgptRouter.routes())
 
 app.listen(3010, () => {

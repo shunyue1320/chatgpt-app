@@ -1,27 +1,21 @@
 import fetch from 'node-fetch'
-import type { ChatGPTAPIOptions, SendMessageOptions } from 'chatgpt'
+import type { ChatGPTAPIOptions, ChatMessage, SendMessageBrowserOptions, SendMessageOptions } from 'chatgpt'
 import { ChatGPTAPI, ChatGPTUnofficialProxyAPI } from 'chatgpt'
 import { SocksProxyAgent } from 'socks-proxy-agent'
 import { HttpsProxyAgent } from 'https-proxy-agent'
+import { ErrorCodeMessage } from '../constants/error'
 import type { RequestOptions } from '../typings/chatgptService'
 import type { ApiModel, ChatGPTUnofficialProxyAPIOptions } from '../typings/chatgptController'
 import { isNotEmptyString } from '../utils/is'
 import { sendResponse } from '../utils/response'
 
-const ErrorCodeMessage: Record<string, string> = {
-  401: '[OpenAI] 提供错误的API密钥 | Incorrect API key provided',
-  403: '[OpenAI] 服务器拒绝访问，请稍后再试 | Server refused to access, please try again later',
-  502: '[OpenAI] 错误的网关 |  Bad Gateway',
-  503: '[OpenAI] 服务器繁忙，请稍后再试 | Server is busy, please try again later',
-  504: '[OpenAI] 网关超时 | Gateway Time-out',
-  500: '[OpenAI] 服务器繁忙，请稍后再试 | Internal Server Error',
-}
-
-const timeoutMs: number = isNaN(Number(process.env.TIMEOUT_MS)) ? 30 * 1000 : Number(process.env.TIMEOUT_MS)
-let apiModel: ApiModel
 if (!isNotEmptyString(process.env.OPENAI_API_KEY) && !isNotEmptyString(process.env.OPENAI_ACCESS_TOKEN))
   throw new Error('环境变量 OPENAI_API_KEY 或 OPENAI_ACCESS_TOKEN 必须填写一个')
 
+const timeoutMs: number = isNaN(Number(process.env.TIMEOUT_MS)) ? 30 * 1000 : Number(process.env.TIMEOUT_MS)
+const model = isNotEmptyString(process.env.OPENAI_API_MODEL) ? process.env.OPENAI_API_MODEL : 'gpt-3.5-turbo'
+
+let apiModel: ApiModel
 let api: ChatGPTAPI | ChatGPTUnofficialProxyAPI
 
 // chatgpt api 文档: https://github.com/transitive-bullshit/chatgpt-api
@@ -29,8 +23,6 @@ let api: ChatGPTAPI | ChatGPTUnofficialProxyAPI
   // 使用 OPENAI_API_KEY
   if (isNotEmptyString(process.env.OPENAI_API_KEY)) {
     const OPENAI_API_BASE_URL = process.env.OPENAI_API_BASE_URL
-    const OPENAI_API_MODEL = process.env.OPENAI_API_MODEL
-    const model = isNotEmptyString(OPENAI_API_MODEL) ? OPENAI_API_MODEL : 'gpt-3.5-turbo'
 
     const options: ChatGPTAPIOptions = {
       apiKey: process.env.OPENAI_API_KEY,
@@ -60,19 +52,21 @@ let api: ChatGPTAPI | ChatGPTUnofficialProxyAPI
   }
   // 使用 OPENAI_ACCESS_TOKEN
   else {
-    const OPENAI_API_MODEL = process.env.OPENAI_API_MODEL
     const options: ChatGPTUnofficialProxyAPIOptions = {
       accessToken: process.env.OPENAI_ACCESS_TOKEN,
+      model,
       debug: true,
     }
-    if (isNotEmptyString(OPENAI_API_MODEL))
-      options.model = OPENAI_API_MODEL
 
     setupProxy(options)
     api = new ChatGPTUnofficialProxyAPI({ ...options })
     apiModel = 'ChatGPTUnofficialProxyAPI'
   }
 })()
+
+export function currentModel(): ApiModel {
+  return apiModel
+}
 
 function setupProxy(options: ChatGPTAPIOptions | ChatGPTUnofficialProxyAPIOptions) {
   // 如果存在 SOCKS 代理
@@ -101,31 +95,40 @@ function setupProxy(options: ChatGPTAPIOptions | ChatGPTUnofficialProxyAPIOption
 }
 
 export async function chatReplyProcess(options: RequestOptions) {
-  const { message, lastContext, process, systemMessage } = options
+  const { message, lastContext, process, systemMessage, temperature, top_p } = options
   try {
-    let options: SendMessageOptions = { timeoutMs }
+    let response: ChatMessage
 
-    // 添加聊天前置 prompt 提示语
     if (apiModel === 'ChatGPTAPI') {
+      const options: SendMessageOptions = { timeoutMs }
+      options.completionParams = { model, temperature, top_p }
+      // 添加聊天前置 prompt 提示语
       if (isNotEmptyString(systemMessage))
         options.systemMessage = systemMessage
-    }
-
-    // 携带历史消息id
-    if (lastContext) {
-      if (apiModel === 'ChatGPTAPI')
+      // 携带历史消息id
+      if (lastContext)
         options.parentMessageId = lastContext.parentMessageId
-      else
-        options = { ...lastContext }
-    }
 
-    const response = await api.sendMessage(message, {
-      ...options,
-      // 消息回复过程
-      onProgress: (partialResponse) => {
-        process?.(partialResponse)
-      },
-    })
+      response = await api.sendMessage(message, {
+        ...options,
+        // 消息回复过程
+        onProgress: (partialResponse) => {
+          process?.(partialResponse)
+        },
+      })
+    }
+    else if (apiModel === 'ChatGPTUnofficialProxyAPI') {
+      const options: SendMessageBrowserOptions = { timeoutMs }
+      if (lastContext)
+        options.parentMessageId = lastContext.parentMessageId
+
+      response = await api.sendMessage(message, {
+        ...options,
+        onProgress: (partialResponse) => {
+          process?.(partialResponse)
+        },
+      })
+    }
 
     return sendResponse({ type: 'Success', data: response })
   }

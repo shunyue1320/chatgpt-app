@@ -1,7 +1,7 @@
 <script setup lang='ts'>
 import { useRouter } from 'vue-router'
 const router = useRouter()
-router.replace({ name: 'Chat', params: { uuid: 1420 } })
+router.replace({ name: 'Chat', params: { uuid: 3011 } })
 </script>
 
 <template>

@@ -16,12 +16,11 @@ router.post('/chat-process', async (ctx) => {
       lastContext: options,
       process: (chat: ChatMessage) => {
         // 以 JSON 字符串形式写入响应流
-        ctx.body = firstChunk ? JSON.stringify(chat) : `\n${JSON.stringify(chat)}`
+        ctx.res.write(firstChunk ? JSON.stringify(chat) : `\n${JSON.stringify(chat)}`)
         firstChunk = false
       },
       systemMessage,
     })
-    ctx.body = { a: 1 }
   }
   catch (error) {
     ctx.body = JSON.stringify(error)

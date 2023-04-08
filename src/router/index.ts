@@ -1,5 +1,6 @@
 import type { App } from 'vue'
 import { createRouter, createWebHashHistory } from 'vue-router'
+import { setupPageGuard } from './permission'
 import { ChatLayout } from '@/views/chat/layout'
 
 const routes = [
@@ -22,6 +23,8 @@ export const router = createRouter({
   history: createWebHashHistory(),
   routes,
 })
+
+setupPageGuard(router)
 
 export async function setupRouter(app: App) {
   app.use(router)

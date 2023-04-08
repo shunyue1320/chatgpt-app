@@ -46,7 +46,7 @@ router.post('/session', async (ctx) => {
 
 router.post('/verify', async (ctx) => {
   try {
-    const { token } = ctx.body as { token: string }
+    const { token } = ctx.request.body as { token: string }
     if (!token)
       throw new Error('密钥为空 | Secret key is empty')
 

@@ -4,17 +4,12 @@ RUN npm install pnpm -g
 
 WORKDIR /app
 
-COPY ./package.json /app
-
-COPY ./pnpm-lock.yaml /app
+COPY . /app
 
 RUN pnpm install
 
-COPY . /app
-
 # build frontend
 RUN pnpm run build
-
 # build backend
 RUN pnpm -F chatgpt-app-service run build
 

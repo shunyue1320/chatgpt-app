@@ -57,6 +57,7 @@ let api: ChatGPTAPI | ChatGPTUnofficialProxyAPI
   else {
     const options: ChatGPTUnofficialProxyAPIOptions = {
       accessToken: process.env.OPENAI_ACCESS_TOKEN,
+      apiReverseProxyUrl: isNotEmptyString(process.env.API_REVERSE_PROXY) ? process.env.API_REVERSE_PROXY : 'https://bypass.churchless.tech/api/conversation',
       model,
       debug,
     }
@@ -93,6 +94,11 @@ function setupProxy(options: ChatGPTAPIOptions | ChatGPTUnofficialProxyAPIOption
       options.fetch = (url, options) => {
         return fetch(url, { agent, ...options })
       }
+    }
+  }
+  else {
+    options.fetch = (url, options) => {
+      return fetch(url, { ...options })
     }
   }
 }

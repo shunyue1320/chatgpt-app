@@ -91,6 +91,7 @@ importers:
       https-proxy-agent: ^5.0.1
       koa: ^2.14.1
       koa-bodyparser: ^4.4.0
+      koa-mount: ^4.0.0
       koa-static: ^5.0.0
       node-fetch: ^3.3.1
       rimraf: ^4.4.1
@@ -107,6 +108,7 @@ importers:
       https-proxy-agent: 5.0.1
       koa: 2.14.1
       koa-bodyparser: 4.4.0
+      koa-mount: 4.0.0
       koa-static: 5.0.0
       node-fetch: 3.3.1
       socks-proxy-agent: 7.0.0
@@ -3749,6 +3751,16 @@ packages:
     dependencies:
       co: 4.6.0
       koa-compose: 4.1.0
+    dev: false
+
+  /koa-mount/4.0.0:
+    resolution: {integrity: sha512-rm71jaA/P+6HeCpoRhmCv8KVBIi0tfGuO/dMKicbQnQW/YJntJ6MnnspkodoA4QstMVEZArsCphmd0bJEtoMjQ==}
+    engines: {node: '>= 7.6.0'}
+    dependencies:
+      debug: 4.3.4
+      koa-compose: 4.1.0
+    transitivePeerDependencies:
+      - supports-color
     dev: false
 
   /koa-send/5.0.1:

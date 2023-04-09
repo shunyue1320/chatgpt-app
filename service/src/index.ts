@@ -1,6 +1,7 @@
 import './preload'
 import path from 'node:path'
 import Koa from 'koa'
+import mount from 'koa-mount'
 import serve from 'koa-static'
 import bodyparser from 'koa-bodyparser'
 import cors from '@koa/cors'
@@ -13,6 +14,7 @@ app.use(bodyparser())
 app.use(cors({ origin: '*' }))
 
 app.use(chatgptRouter.routes()).use(chatgptRouter.allowedMethods())
+app.use(mount('/api', chatgptRouter.routes())).use(chatgptRouter.allowedMethods())
 
 app.listen(3010, () => {
   globalThis.console.log('Server started on http://localhost:3010')

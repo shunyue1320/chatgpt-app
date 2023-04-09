@@ -5,11 +5,11 @@ on:
     branches:
       - main
 		paths-ignore:
-		- "*.md"
-		- "LICENSE"
-		- ".vscode"
-		- ".husky"
-		- "assets"
+			- "*.md"
+			- "LICENSE"
+			- ".vscode"
+			- ".husky"
+			- "assets"
 
 jobs:
   check-code:

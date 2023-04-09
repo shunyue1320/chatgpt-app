@@ -2,12 +2,14 @@ import fetch from 'node-fetch'
 import type { ChatGPTAPIOptions, ChatMessage, SendMessageBrowserOptions, SendMessageOptions } from 'chatgpt'
 import { ChatGPTAPI, ChatGPTUnofficialProxyAPI } from 'chatgpt'
 import { SocksProxyAgent } from 'socks-proxy-agent'
-import { HttpsProxyAgent } from 'https-proxy-agent'
+import httpsProxyAgent from 'https-proxy-agent'
 import { ErrorCodeMessage } from '../constants/error'
 import type { RequestOptions } from '../typings/chatgptService'
 import type { ApiModel, ChatGPTUnofficialProxyAPIOptions } from '../typings/chatgptController'
 import { isNotEmptyString } from '../utils/is'
 import { sendResponse } from '../utils/response'
+
+const { HttpsProxyAgent } = httpsProxyAgent
 
 if (!isNotEmptyString(process.env.OPENAI_API_KEY) && !isNotEmptyString(process.env.OPENAI_ACCESS_TOKEN))
   throw new Error('环境变量 OPENAI_API_KEY 或 OPENAI_ACCESS_TOKEN 必须填写一个')

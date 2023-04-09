@@ -4,12 +4,12 @@ on:
   pull_request:
     branches:
       - main
-		paths-ignore:
-			- "*.md"
-			- "LICENSE"
-			- ".vscode"
-			- ".husky"
-			- "assets"
+    paths-ignore:
+      - "*.md"
+      - "LICENSE"
+      - ".vscode"
+      - ".husky"
+      - "assets"
 
 jobs:
   check-code:

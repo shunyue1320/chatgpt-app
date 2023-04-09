@@ -14,6 +14,7 @@ const { HttpsProxyAgent } = httpsProxyAgent
 if (!isNotEmptyString(process.env.OPENAI_API_KEY) && !isNotEmptyString(process.env.OPENAI_ACCESS_TOKEN))
   throw new Error('环境变量 OPENAI_API_KEY 或 OPENAI_ACCESS_TOKEN 必须填写一个')
 
+const debug: boolean = process.env.OPENAI_API_DEBUG === 'true'
 const timeoutMs: number = isNaN(Number(process.env.TIMEOUT_MS)) ? 30 * 1000 : Number(process.env.TIMEOUT_MS)
 const model = isNotEmptyString(process.env.OPENAI_API_MODEL) ? process.env.OPENAI_API_MODEL : 'gpt-3.5-turbo'
 
@@ -29,7 +30,7 @@ let api: ChatGPTAPI | ChatGPTUnofficialProxyAPI
     const options: ChatGPTAPIOptions = {
       apiKey: process.env.OPENAI_API_KEY,
       completionParams: { model },
-      debug: true,
+      debug,
     }
 
     // 如果使用gpt-4，则增加最大令牌限制
@@ -57,7 +58,7 @@ let api: ChatGPTAPI | ChatGPTUnofficialProxyAPI
     const options: ChatGPTUnofficialProxyAPIOptions = {
       accessToken: process.env.OPENAI_ACCESS_TOKEN,
       model,
-      debug: true,
+      debug,
     }
 
     setupProxy(options)

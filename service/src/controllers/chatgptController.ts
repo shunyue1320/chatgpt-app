@@ -3,10 +3,11 @@ import type { ChatMessage } from 'chatgpt'
 import { isNotEmptyString } from '../utils/is'
 import type { RequestProps } from '../typings/chatgptController'
 import { chatReplyProcess, currentModel } from '../thirdPartyServices/chatgptService'
+import { auth } from '../middlewares/auth'
 
 const router = new Router()
 
-router.post('/chat-process', async (ctx) => {
+router.post('/chat-process', auth, async (ctx) => {
   ctx.set('Content-type', 'application/octet-stream')
 
   try {

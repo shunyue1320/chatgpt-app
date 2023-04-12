@@ -4,10 +4,11 @@ import { isNotEmptyString } from '../utils/is'
 import type { RequestProps } from '../typings/chatgptController'
 import { chatReplyProcess, currentModel } from '../thirdPartyServices/chatgptService'
 import { auth } from '../middlewares/auth'
+import { limiter } from '../middlewares/limiter'
 
 const router = new Router()
 
-router.post('/chat-process', auth, async (ctx) => {
+router.post('/chat-process', [auth, limiter], async (ctx) => {
   ctx.set('Content-type', 'application/octet-stream')
 
   try {

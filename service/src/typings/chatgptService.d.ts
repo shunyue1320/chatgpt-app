@@ -8,3 +8,11 @@ export interface RequestOptions {
 	temperature?: number
   top_p?: number
 }
+
+export interface SetProxyOptions {
+  fetch?: typeof fetch
+}
+
+export interface UsageResponse {
+  total_usage: number
+}

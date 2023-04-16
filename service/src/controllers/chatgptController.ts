@@ -2,7 +2,7 @@ import Router from '@koa/router'
 import type { ChatMessage } from 'chatgpt'
 import { isNotEmptyString } from '../utils/is'
 import type { RequestProps } from '../typings/chatgptController'
-import { chatReplyProcess, currentModel } from '../thirdPartyServices/chatgptService'
+import { chatConfig, chatReplyProcess, currentModel } from '../thirdPartyServices/chatgptService'
 import { auth } from '../middlewares/auth'
 import { limiter } from '../middlewares/limiter'
 
@@ -59,6 +59,16 @@ router.post('/verify', async (ctx) => {
   }
   catch (error) {
     ctx.body = { status: 'Fail', message: error.message, data: null }
+  }
+})
+
+router.post('/config', auth, async (ctx) => {
+  try {
+    const response = await chatConfig()
+    ctx.body = response
+  }
+  catch (error) {
+    ctx.body = error
   }
 })
 

@@ -4,8 +4,8 @@ import { ChatGPTAPI, ChatGPTUnofficialProxyAPI } from 'chatgpt'
 import { SocksProxyAgent } from 'socks-proxy-agent'
 import httpsProxyAgent from 'https-proxy-agent'
 import { ErrorCodeMessage } from '../constants/error'
-import type { RequestOptions } from '../typings/chatgptService'
-import type { ApiModel, ChatGPTUnofficialProxyAPIOptions } from '../typings/chatgptController'
+import type { RequestOptions, SetProxyOptions, UsageResponse } from '../typings/chatgptService'
+import type { ApiModel, ChatGPTUnofficialProxyAPIOptions, ModelConfig } from '../typings/chatgptController'
 import { isNotEmptyString } from '../utils/is'
 import { sendResponse } from '../utils/response'
 
@@ -72,7 +72,7 @@ export function currentModel(): ApiModel {
   return apiModel
 }
 
-function setupProxy(options: ChatGPTAPIOptions | ChatGPTUnofficialProxyAPIOptions) {
+function setupProxy(options: ChatGPTAPIOptions | ChatGPTUnofficialProxyAPIOptions | SetProxyOptions) {
   // 如果存在 SOCKS 代理
   if (process.env.SOCKS_PROXY_HOST && process.env.SOCKS_PROXY_PORT) {
     // 创建 SocksProxyAgent 代理实例
@@ -148,4 +148,66 @@ export async function chatReplyProcess(options: RequestOptions) {
       return sendResponse({ type: 'Fail', message: ErrorCodeMessage[code] })
     return sendResponse({ type: 'Fail', message: error.message ?? 'Please check the back-end console' })
   }
+}
+
+export async function chatConfig() {
+  const usage = await fetchUsage()
+  const reverseProxy = process.env.API_REVERSE_PROXY ?? '-'
+  const httpsProxy = (process.env.HTTPS_PROXY || process.env.ALL_PROXY) ?? '-'
+  const socksProxy = (process.env.SOCKS_PROXY_HOST && process.env.SOCKS_PROXY_PORT)
+    ? (`${process.env.SOCKS_PROXY_HOST}:${process.env.SOCKS_PROXY_PORT}`)
+    : '-'
+  return sendResponse<ModelConfig>({
+    type: 'Success',
+    data: { apiModel, reverseProxy, timeoutMs, socksProxy, httpsProxy, usage },
+  })
+}
+
+async function fetchUsage() {
+  const OPENAI_API_KEY = process.env.OPENAI_API_KEY
+  const OPENAI_API_BASE_URL = process.env.OPENAI_API_BASE_URL
+
+  if (!isNotEmptyString(OPENAI_API_KEY))
+    return Promise.resolve('-')
+
+  const API_BASE_URL = isNotEmptyString(OPENAI_API_BASE_URL)
+    ? OPENAI_API_BASE_URL
+    : 'https://api.openai.com'
+
+  const [startDate, endDate] = formatDate()
+  // 每月使用量
+  const urlUsage = `${API_BASE_URL}/v1/dashboard/billing/usage?start_date=${startDate}&end_date=${endDate}`
+
+  const headers = {
+    'Authorization': `Bearer ${OPENAI_API_KEY}`,
+    'Content-Type': 'application/json',
+  }
+
+  const options = {} as SetProxyOptions
+
+  setupProxy(options)
+
+  try {
+    // 获取已使用量
+    const useResponse = await options.fetch(urlUsage, { headers })
+    if (!useResponse.ok)
+      throw new Error('获取使用量失败')
+    const usageData = await useResponse.json() as UsageResponse
+    const usage = Math.round(usageData.total_usage) / 100
+    return Promise.resolve(usage ? `$${usage}` : '-')
+  }
+  catch (error) {
+    global.console.log(error)
+    return Promise.resolve('-')
+  }
+}
+
+function formatDate(): string[] {
+  const today = new Date()
+  const year = today.getFullYear()
+  const month = today.getMonth() + 1
+  const lastDay = new Date(year, month, 0)
+  const formattedFirstDay = `${year}-${month.toString().padStart(2, '0')}-01`
+  const formattedLastDay = `${year}-${month.toString().padStart(2, '0')}-${lastDay.getDate().toString().padStart(2, '0')}`
+  return [formattedFirstDay, formattedLastDay]
 }

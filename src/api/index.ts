@@ -47,3 +47,9 @@ export function fetchVerify<T>(token: string) {
     data: { token },
   })
 }
+
+export function fetchChatConfig<T = any>() {
+  return post<T>({
+    url: './config',
+  })
+}
